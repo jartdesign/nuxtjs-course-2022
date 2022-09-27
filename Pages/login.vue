@@ -7,16 +7,16 @@
               class="flex justify-center items-center flex-wrap h-full g-6 text-gray-800"
             >
               <div class="md:w-8/12 lg:w-6/12 mb-12 md:mb-0">
-                <img
+                <!--<img
                   src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
                   class="w-full"
                   alt="Phone image"
-                />
+                />-->
               </div>
               <div class="md:w-8/12 lg:w-5/12 lg:ml-20">
-                <div>
+                <div v-if="_error">
                   <p class="bg-red-500 text-red-200 text-sm p-3 mb-5">
-                    
+                    {{ _error }}
                   </p>
                 </div>
                 <form @submit.prevent="onSubmit">
@@ -26,7 +26,7 @@
                       type="text"
                       class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       placeholder="Email address"
-                      
+                      v-model="form.email"
                     />
                   </div>
   
@@ -36,7 +36,7 @@
                       type="password"
                       class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       placeholder="Password"
-                      
+                      v-model="form.password"
                     />
                   </div>
   
@@ -47,8 +47,8 @@
                     data-mdb-ripple="true"
                     data-mdb-ripple-color="light"
                   >
-                    <span>Loading...</span>
-                    <span>Sign in</span>
+                    <span v-if="isLoading">Loading...</span>
+                    <span v-else>Sign in</span>
                   </button>
                 </form>
               </div>
@@ -62,8 +62,34 @@
 
   <script setup>
     const url = "https://reqres.in/api/login";
-    const onSubmit = () => {
-        const response = useFetch(url);
+
+    const isLoading = ref(false)
+    const _error = ref(null)
+
+    const form = reactive({
+        "email": "eve.holt@reqres.in",
+        "password": "cityslicka"
+    })
+    const onSubmit = async () => {
+        if (isLoading.value) return;
+
+        isLoading.value = true;
+        const { data, error } =  await useFetch(url, {
+            method: 'post',
+            body: form
+        });
+
+        isLoading.value = false;
+
+        if (error.value) {
+            _error.value = error.value.data.error;
+            return;
+        }
+
+        const auth = useAuth();
+        auth.value.isAuthenticated = true;
+        navigateTo('/')
+        //console.log(data.value, error.value.data)
     }
   </script>
   

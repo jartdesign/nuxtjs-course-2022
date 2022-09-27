@@ -3,7 +3,7 @@
         <Head>
             <Title>Nuxt3 - IPhone {{ name }}</Title>
         </Head>
-        
+        <div class="flex justify-center w-full mt-20">
         <div class="grid grid-cols-2">
             <div>
                 <img :src="`/images/iphone-${route.params.name}.webp`" alt="" />
@@ -17,7 +17,7 @@
     </button>
         </div>
         </div>
-
+    </div>
 </div>
 </template>
 
