@@ -88,8 +88,7 @@
 
         const auth = useAuth();
         auth.value.isAuthenticated = true;
-        navigateTo('/')
-        //console.log(data.value, error.value.data)
+        navigateTo('/');
     }
   </script>
   
